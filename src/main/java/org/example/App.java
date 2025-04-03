@@ -24,6 +24,13 @@ public class App {
                     for (int i = 0; i < table.getRowCount(); i++) {
                         for (int j = 0; j < table.getColumnCount(); j++) {
                             String text = table.getText(i, j).replace("\n", " ").replace("\r", " ").trim();
+
+                            if(text.equals("OD")){
+                                text = "Seg. Odontológica";
+                            } else if (text.equals("AMB")){
+                                text = "Seg. Ambulatorial";
+                            }
+
                             builder.append("\"").append(text).append("\"");
                             if (j < table.getColumnCount() - 1) {
                                 builder.append(",");
@@ -42,21 +49,21 @@ public class App {
         fw.close();
 
         FileOutputStream fos = new FileOutputStream("Data.zip");
-        ZipOutputStream zs = new ZipOutputStream(fos);
+        ZipOutputStream zos = new ZipOutputStream(fos);
+
+        ZipEntry entry = new ZipEntry(zipFileName);
+        zos.putNextEntry(entry);
 
         FileInputStream fis = new FileInputStream(zipFileName);
-        ZipEntry entry = new ZipEntry(zipFileName);
-        zs.putNextEntry(entry);
 
         int length;
         byte[] buffer = new byte[1024];
 
         while((length = fis.read(buffer)) > 0){
-            zs.write(buffer, 0, length);
+            zos.write(buffer, 0, length);
         }
         fis.close();
-        zs.closeEntry();
-        zs.close();
+        zos.closeEntry();
+        zos.close();
     }
-
 }
